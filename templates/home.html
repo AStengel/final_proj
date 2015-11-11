@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="jumbotron">
-  <h1>Welcome to quClass</h1>
-  <p>The #1 Class and Professor Review Site for QU Students</p>
+{% if user.is_authenticated %}
+<div class='jumbotron'>
+  <h1>Welcome Back to quClass!</h1>
 </div>
+{% else %}
+<div class='jumbotron'>
+  <h1> Welcome to quClass</h1>
+  <p> The Class and Professor rating site for Quinnipiac Students</p>
+  <p><a class='btn btn-lg btn-primary' href="{% url 'registration_register' %}">Sign Up Here</a></p>
+</div>
+{% endif %}
 {% endblock %}
