@@ -2,12 +2,12 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class='jumbotron'>
-  <h1>Welcome Back to quClass!</h1>
+  <h1>Welcome Back to quNote!</h1>
 </div>
 {% else %}
 <div class='jumbotron'>
-  <h1> Welcome to quClass</h1>
-  <p> The Class and Professor rating site for Quinnipiac Students</p>
+  <h1> Welcome to quNote</h1>
+  <p> The Place for QU Students to share Notes!</p>
   <p><a class='btn btn-lg btn-primary' href="{% url 'registration_register' %}">Sign Up Here</a></p>
 </div>
 {% endif %}
