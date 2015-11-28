@@ -29,6 +29,13 @@ class ClassListView(ListView):
 class ClassDetailView(DetailView):
   model = Class
   template_name = 'class/class_detail.html'
+  
+  def get_context_data(self, **kwargs):
+    context = super(ClassDetailView, self).get_context_data(**kwargs)
+    Class = Class.objects.get(id=self.kwargs['pk'])
+    notes = Note.objects.filter(Class=Class)
+    context['notes'] = notes
+    return context
 
 class ClassUpdateView(UpdateView):
   model = Class
