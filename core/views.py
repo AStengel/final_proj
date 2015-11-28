@@ -6,6 +6,7 @@ from .models import *
 from django.views.generic import ListView
 from django.views.generic import DetailView
 from django.views.generic import UpdateView
+from django.views.generic import DeleteView
 
 # Create your views here.
 
@@ -33,3 +34,9 @@ class ClassUpdateView(UpdateView):
   model = Class
   template_name = 'class/class_form.html'
   fields = ['class', 'professor']
+  
+class ClassDeleteView(DeleteView):
+  model = Class
+  template_name = 'class/class_confirm_delete.html'
+  success_url = reverse_lazy('class_list')
+ 
