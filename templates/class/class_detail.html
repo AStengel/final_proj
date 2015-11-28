@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ class.title }}</h1>
+<p>{{ class.description }}</p>
+<p>Asked By {{ class.user.username }} on {{ class.creaeted_at }}</p>
+{% endblock %}

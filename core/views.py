@@ -4,6 +4,7 @@ from django.views.generic import CreateView
 from django.core.urlresolvers import reverse_lazy
 from .models import *
 from django.views.generic import ListView
+from django.views.generic import DetailView
 
 # Create your views here.
 
@@ -22,3 +23,7 @@ class ClassCreateView(CreateView):
 class ClassListView(ListView):
   model = Class
   template_name = "class/class_list.html"
+  
+class ClassDetailView(DetailView):
+  model = Class
+  template_name = 'class/class_detail.html'
