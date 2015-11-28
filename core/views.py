@@ -59,3 +59,13 @@ class NoteCreateView(CreateView):
     form.instance.user = self.request.user
     form.instance.Class = Class.objects.get(id=self.kwargs['pk'])
     return super(NoteCreateView, self).form_valid(form)
+
+class NoteUpdateView(UpdateView):
+  model = Note
+  pk_url_kwarg = 'note_pk'
+  template_name = 'note/note_form.html'
+  fields = ['text']
+  
+  def get_success_url(self):
+    return self.object.question.get_absolute_url()
+  
