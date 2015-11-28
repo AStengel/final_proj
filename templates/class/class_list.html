@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for question in object_list %}
+<div class="panel">
+  <h3>{{ class.title }}</h3>
+  <p>Asked by {{ class.user.username }} on {{ class.created_at }}</p>
+</div>
+{% endfor %}
+{% endblock %}
