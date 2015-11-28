@@ -6,4 +6,5 @@
 {% if class.user == user %}
 <p><a href="{% url 'class_delete' pk=question.id %}">Delete Class</a></p>
 {% endif %}
+<p><a href="{% url 'note_create' pk=question.id %}">Share Your Note</a></p>
 {% endblock %}
