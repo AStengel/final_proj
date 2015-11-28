@@ -3,4 +3,7 @@
 <h1>{{ class.title }}</h1>
 <p>{{ class.description }}</p>
 <p>Asked By {{ class.user.username }} on {{ class.creaeted_at }}</p>
+{% if class.user == user %}
+<p><a href="{% url 'class_update' pk-question.id %}">Edit Submission</a></p>
+{% endif %}
 {% endblock %}

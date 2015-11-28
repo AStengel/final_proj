@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-{% for question in object_list %}
+{% for class in object_list %}
 <div class="panel">
   <h3><a href="{{ class.get_absolute_url }}">{{ class.title }}</a></h3>
   <p>Asked by {{ class.user.username }} on {{ class.created_at }}</p>
