@@ -2,7 +2,7 @@
 {% block content %}
 {% for class in object_list %}
 <div class="panel">
-  <h3><a href="{{ class.get_absolute_url }}">{{ class.title }}</a></h3>
+  <h3><a href="{{ class.get_absolute_url }}">{{ class.course }}</a></h3>
   <p>Added by {{ class.user.username }} on {{ class.created_at }}</p>
 </div>
 {% endfor %}

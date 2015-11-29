@@ -14,6 +14,7 @@
   <p>{{ note.text }}</p>
   {% if note.user == user %}
   <p><a href="{% url 'note_update' class_pk=class.id note_pk=note.id %}">Edit Note</a></p>
+  <p><a href="{% url 'note_delete' class_pk=class.id note_pk=note.id %}">Delete Note</a></p>
   {% endif %}
   <p>Shared by {{ note.user.username }} on {{ note.created_at }}</p>
 </div>

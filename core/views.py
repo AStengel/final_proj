@@ -29,7 +29,7 @@ class ClassListView(ListView):
 class ClassDetailView(DetailView):
   model = Class
   template_name = 'class/class_detail.html'
-  
+
   def get_context_data(self, **kwargs):
     context = super(ClassDetailView, self).get_context_data(**kwargs)
     Class = Class.objects.get(id=self.kwargs['pk'])
@@ -65,7 +65,14 @@ class NoteUpdateView(UpdateView):
   pk_url_kwarg = 'note_pk'
   template_name = 'note/note_form.html'
   fields = ['text']
-  
+
   def get_success_url(self):
     return self.object.question.get_absolute_url()
-  
+
+class NoteDeleteView(DeleteView):
+  model = Note
+  pk_url_kwarg = 'note_pk'
+  template_name = 'note/note_confirm_delete.html'
+
+  def get_success_url(self):
+    return self.object.Class.get_absolute_url()
