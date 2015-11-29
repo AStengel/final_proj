@@ -36,13 +36,15 @@ class ClassDetailView(DetailView):
     Class = Class.objects.get(id=self.kwargs['pk'])
     notes = Note.objects.filter(Class=Class)
     context['notes'] = notes
+    user_notes= Note.objects.filter(Class=Class, user=self.request.user)
+    context['user_notes'] = user_notes
     return context
 
 class ClassUpdateView(UpdateView):
   model = Class
   template_name = 'class/class_form.html'
   fields = ['class', 'professor']
-  
+
   def get_object(self, *args, **kwargs):
     object = super(ClassUpdateView, self).get_object(*args, **kwargs)
     if object.user !=self.request.user:
@@ -53,7 +55,7 @@ class ClassDeleteView(DeleteView):
   model = Class
   template_name = 'class/class_confirm_delete.html'
   success_url = reverse_lazy('class_list')
-  
+
   def get_object(self, *args, **kwargs):
     object = super(ClassDeleteView, self).get_object(*args, **kwargs)
     if object.user !=self.request.user:
@@ -73,6 +75,12 @@ class NoteCreateView(CreateView):
     form.instance.Class = Class.objects.get(id=self.kwargs['pk'])
     return super(NoteCreateView, self).form_valid(form)
 
+    Class= Class.objects.get(id=self.kwargs['pk'])
+    if Note.objects.filter(Class=Class, user=self.request.user).exists():
+      raise PermissionDenied()
+
+
+
 class NoteUpdateView(UpdateView):
   model = Note
   pk_url_kwarg = 'note_pk'
@@ -81,7 +89,7 @@ class NoteUpdateView(UpdateView):
 
   def get_success_url(self):
     return self.object.question.get_absolute_url()
-  
+
   def get_object(self, *args, **kwargs):
     object = super(NoteUpdateView, self).get_object(*args, **kwargs)
     if object.user !=self.request.user:

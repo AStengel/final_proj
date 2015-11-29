@@ -19,5 +19,7 @@
   <p>Shared by {{ note.user.username }} on {{ note.created_at }}</p>
 </div>
 {% endfor %}
-<p><a href="{% url 'note_create' pk=question.id %}">Share Your Note</a></p>
+{% if not user_notes %}
+<p><a href="{% url 'note_create' pk=class.id %}">Share Your Note</a></p>
+{% endif %}
 {% endblock %}
