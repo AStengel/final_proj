@@ -7,6 +7,7 @@ from django.views.generic import ListView
 from django.views.generic import DetailView
 from django.views.generic import UpdateView
 from django.views.generic import DeleteView
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 
@@ -41,11 +42,23 @@ class ClassUpdateView(UpdateView):
   model = Class
   template_name = 'class/class_form.html'
   fields = ['class', 'professor']
+  
+  def get_object(self, *args, **kwargs):
+    object = super(ClassUpdateView, self).get_object(*args, **kwargs)
+    if object.user !=self.request.user:
+      raise PermissionDenied()
+    return object
 
 class ClassDeleteView(DeleteView):
   model = Class
   template_name = 'class/class_confirm_delete.html'
   success_url = reverse_lazy('class_list')
+  
+  def get_object(self, *args, **kwargs):
+    object = super(ClassDeleteView, self).get_object(*args, **kwargs)
+    if object.user !=self.request.user:
+      raise PermissionDenied()
+    return object
 
 class NoteCreateView(CreateView):
   model = Note
@@ -68,6 +81,12 @@ class NoteUpdateView(UpdateView):
 
   def get_success_url(self):
     return self.object.question.get_absolute_url()
+  
+  def get_object(self, *args, **kwargs):
+    object = super(NoteUpdateView, self).get_object(*args, **kwargs)
+    if object.user !=self.request.user:
+      raise PermissionDenied()
+    return object
 
 class NoteDeleteView(DeleteView):
   model = Note
@@ -76,3 +95,9 @@ class NoteDeleteView(DeleteView):
 
   def get_success_url(self):
     return self.object.Class.get_absolute_url()
+
+  def get_object(self, *args, **kwargs):
+    object = super(NoteDeleteView, self).get_object(*args, **kwargs)
+    if object.user !=self.request.user:
+      raise PermissionDenied()
+    return object
