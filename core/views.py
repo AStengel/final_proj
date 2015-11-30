@@ -29,6 +29,7 @@ class CourseCreateView(CreateView):
 class CourseListView(ListView):
   model = Course
   template_name = "course/course_list.html"
+  paginate_by = 4
 
 class CourseDetailView(DetailView):
   model = Course
