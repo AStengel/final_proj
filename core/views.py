@@ -11,6 +11,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from django.views.generic import FormView
 from .forms import *
+from django.db.models import Avg
 
 # Create your views here.
 
@@ -30,7 +31,7 @@ class CourseListView(ListView):
   model = Course
   template_name = "course/course_list.html"
   paginate_by = 4
-  
+
   def get_context_data(self, **kwargs):
     context = super(CourseListView, self).get_context_data(**kwargs)
     user_votes = Course.objects.filter(vote__user=self.request.user)
@@ -50,7 +51,10 @@ class CourseDetailView(DetailView):
     context['user_notes'] = user_notes
     user_votes = Note.objects.filter(vote__user=self.request.user)
     context['user_votes'] = user_votes
+    rating= Note.objects.filter(course=course).aggregate(Avg('rating'))
+    context['rating'] = rating
     return context
+
 
 class CourseUpdateView(UpdateView):
   model = Course
@@ -77,7 +81,7 @@ class CourseDeleteView(DeleteView):
 class NoteCreateView(CreateView):
   model = Note
   template_name = "note/note_form.html"
-  fields = ['note', 'visibility']
+  fields = ['note', 'visibility', 'rating']
 
   def get_success_url(self):
     return self.object.question.get_absolute_url()
@@ -97,7 +101,7 @@ class NoteUpdateView(UpdateView):
   model = Note
   pk_url_kwarg = 'note_pk'
   template_name = 'note/note_form.html'
-  fields = ['text']
+  fields = ['text', 'visibility', 'rating']
 
   def get_success_url(self):
     return self.object.question.get_absolute_url()

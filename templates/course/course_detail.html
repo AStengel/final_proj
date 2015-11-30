@@ -1,7 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>{{ class.title }}</h1>
-<p>{{ class.description }}</p>
+<h1>{{ course.title }}</h1>
+{% if rating.rating__avg < 0.5 %}
+                              <span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+({{ rating.rating__avg }})
+{% elif rating.rating__avg < 1.5 %}
+                                <span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+({{ rating.rating__avg }})
+{% elif rating.rating__avg < 2.5 %}
+                                <span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+({{ rating.rating__avg }})
+{% elif rating.rating__avg < 3.5 %}
+                                <span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+({{ rating.rating__avg }})
+{% elif rating.rating__avg < 4.5 %}
+                                <span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star-empty"></span>
+({{ rating.rating__avg }})
+{% else %}
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+<span class="glyphicon glyphicon-star"></span>
+({{ rating.rating__avg }})
+{% endif %}
+<p>{{ course.description }}</p>
 <p>Asked {% if course.visibility ==0 %} by <a href="{% url 'user_detail' slug=course.user.username %}">{{course.user.username }}</a> {% endif %} on {{ course.created_at }}</p>
 {% if course.user == user %}
 <p><a href="{% url 'course_delete' pk=question.id %}">Delete Class</a></p>
@@ -16,23 +59,23 @@
   <p><a href="{% url 'note_update' course_pk=course.id note_pk=note.id %}">Edit Note</a></p>
   <p><a href="{% url 'note_delete' course_pk=course.id note_pk=note.id %}">Delete Note</a></p>
   {% endif %}
-<p>Shared {% if note.visibility == 0 %} by <a href="{% url 'user_detail' slug=note.user.username %}">{{ note.user.username }}</a> {% endif %} on {{ note.created_at }}</p>
-<form method="post" action="{% url 'vote' %}">
+  <p>Shared {% if note.visibility == 0 %} by <a href="{% url 'user_detail' slug=note.user.username %}">{{ note.user.username }}</a> {% endif %} on {{ note.created_at }}</p>
+  <form method="post" action="{% url 'vote' %}">
     <span class="badge">{{ note.vote_set.all.count }} Vote{{  note.vote_set.all.count|pluralize }}</span>
     {% csrf_token %}
     <input type="hidden" name="note" value="{{ note.id }}" />
     <input type="hidden" name="course" value="{{ course.id }}" />
     <input type="hidden" name="user" value="{{ user.id }}" />
     {% if note in user_votes %}  
-        <button class="btn btn-link">
-          <span class="glyphicon glyphicon-thumbs-down"></span>
-        </button>
+    <button class="btn btn-link">
+      <span class="glyphicon glyphicon-thumbs-down"></span>
+    </button>
     {% else %}
-        <button class="btn btn-link">
-          <span class="glyphicon glyphicon-thumbs-up"></span>
-        </button>
+    <button class="btn btn-link">
+      <span class="glyphicon glyphicon-thumbs-up"></span>
+    </button>
     {% endif %}
-</form>
+  </form>
 </div>
 {% endfor %}
 {% if not user_notes %}
