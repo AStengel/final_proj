@@ -17,6 +17,14 @@
   <p><a href="{% url 'note_delete' course_pk=course.id note_pk=note.id %}">Delete Note</a></p>
   {% endif %}
   <p>Shared by {{ note.user.username }} on {{ note.created_at }}</p>
+  <p> {{ note.vote_set.all.count }} Vote{{ note.vote_set.all.count|pluralize }}</p>
+  <form method="post" action="{% url 'vote' %}">
+    {% csrf_token %}
+    <input type="hidden" name="note" value="{{ note.id }}" />
+    <input type="hidden" name="course" value="{{ course.id }}" />
+    <input type="hidden" name="user" value="{{ user.id }}" />
+    <button>+</button>
+  </form>
 </div>
 {% endfor %}
 {% if not user_notes %}

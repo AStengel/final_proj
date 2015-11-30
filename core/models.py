@@ -26,7 +26,8 @@ class Note(models.Model):
   
 class Vote(models.Model):
   user = models.ForeignKey(User)
-  course = models.ForeignKey(Course)
+  course = models.ForeignKey(Course, blank=True, null=True)
+  note = models.ForeignKey(Note, blank=True, null=True)
   
   def __unicode__(self):
     return "%s upvoted" % (self.user.username)
