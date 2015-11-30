@@ -4,6 +4,9 @@
 <p>E-Mail Address: {{ user_in_view.email }}</p>
 <p>First Name: {{ user_in_view.first_name }}</p>
 <p>Last Name: {{ user_in_view.last_name }}</p>
+{% if user_in_view == user %}
+<p><a href="{% url 'user_update' slug=user.username %}">Edit Profile</a></p>
+{% endif %}
 <h3>Courses ({{ courses.count }})</h3>
 {% for course in courses %}
   <p><a href="{{ course.get_absolute_url }}">{{ course.title }}</a></p>
