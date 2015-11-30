@@ -4,13 +4,22 @@
 <div class="panel">
   <h3><a href="{{ course.get_absolute_url }}">{{ course.course }}</a></h3>
   <p>Added {% if course.visibility == 0 %} by <a href="{% url 'user_detail' slug=course.user.username %}">{{ course.user.username }}</a> {% endif %} on {{ course.created_at }}</p>
-  <p>{{ course.vote_set.all.count }} Vote{{ course.vote_set.all.count|pluralize }}</p>
   <form method="post" action="{% url 'vote' %}">
+    <span class="badge">{{ course.note_set.all.count }} Note{{  course.note_set.all.count|pluralize }}</span>
+    <span class="badge">{{ course.vote_set.all.count }} Vote{{ course.vote_set.all.count|pluralize }}</span> 
     {% csrf_token %}
     <input type="hidden" name="course" value="{{ course.id }}" />
     <input type="hidden" name="user" value="{{ user.id }}" />
-    <button>+</button>
-  </form>
+        {% if course in user_votes %}  
+        <button class="btn btn-link">
+          <span class="glyphicon glyphicon-thumbs-down"></span>
+        </button>
+        {% else %}
+        <button class="btn btn-link">
+          <span class="glyphicon glyphicon-thumbs-up"></span>
+        </button>
+        {% endif %}
+    </form>
 </div>
 {% empty %}
 <p>No Results Found.</p>

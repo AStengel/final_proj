@@ -30,6 +30,12 @@ class CourseListView(ListView):
   model = Course
   template_name = "course/course_list.html"
   paginate_by = 4
+  
+  def get_context_data(self, **kwargs):
+    context = super(CourseListView, self).get_context_data(**kwargs)
+    user_votes = Course.objects.filter(vote__user=self.request.user)
+    context['user_votes'] = user_votes
+    return context
 
 class CourseDetailView(DetailView):
   model = Course
@@ -42,6 +48,8 @@ class CourseDetailView(DetailView):
     context['notes'] = notes
     user_notes= Note.objects.filter(course=course, user=self.request.user)
     context['user_notes'] = user_notes
+    user_votes = Note.objects.filter(vote__user=self.request.user)
+    context['user_votes'] = user_votes
     return context
 
 class CourseUpdateView(UpdateView):
