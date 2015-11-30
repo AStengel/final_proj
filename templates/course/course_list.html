@@ -3,7 +3,7 @@
 {% for course in object_list %}
 <div class="panel">
   <h3><a href="{{ course.get_absolute_url }}">{{ course.course }}</a></h3>
-  <p>Added By <a href="{% url 'user_detail' slug=course.user.username %}">{{ course.user.username }}</a> on {{course.created_at }}</p>
+  <p>Added {% if course.visibility == 0 %} by <a href="{% url 'user_detail' slug=course.user.username %}">{{ course.user.username }}</a> {% endif %} on {{ course.created_at }}</p>
   <p>{{ course.vote_set.all.count }} Vote{{ course.vote_set.all.count|pluralize }}</p>
   <form method="post" action="{% url 'vote' %}">
     {% csrf_token %}
@@ -18,7 +18,7 @@
 {% if is_paginated %}
 <nav>
   <ul class="pager">
-    {% if page_obj,has_previous %}
+    {% if page_obj_has.previous %}
     <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
     {% endif %}
     {% if page_obj.has_next %}

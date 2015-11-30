@@ -20,7 +20,7 @@ class Home(TemplateView):
 class CourseCreateView(CreateView):
   model = Course
   template_name = "course/course_form.html"
-  fields = ['course', 'professor']
+  fields = ['course', 'professor', 'visibility']
   success_url = reverse_lazy('course_list')
 
   def form_valid(self, form):
@@ -69,7 +69,7 @@ class CourseDeleteView(DeleteView):
 class NoteCreateView(CreateView):
   model = Note
   template_name = "note/note_form.html"
-  fields = ['note']
+  fields = ['note', 'visibility']
 
   def get_success_url(self):
     return self.object.question.get_absolute_url()
@@ -137,57 +137,57 @@ class VoteFormView(FormView):
       else:
         prev_votes[0].delete()
     return redirect('course_list')
-  
+
 class UserDetailView(DetailView):
   model = User
   slug_field = 'username'
   template_name = 'user/user_detail.html'
   context_object_name = 'user_in_view'
-  
+
   def get_context_data(self, **kwargs):
     context = super(UserDetailView, self).get_context_data(**kwargs)
     user_in_view = User.objects.get(username=self.kwargs['slug'])
-    courses = Course.objects.filter(user=user_in_view)
+    courses = Course.objects.filter(user=user_in_view).exclude(visibility=1)
     context['courses'] = courses
-    notes = Note.objects.filter(user=user_in_view)
+    notes= Note.objects.filter(user=user_in_view).exclude(visibility=1)
     context['notes'] = notes
     return context
-  
+
 class UserUpdateView(UpdateView):
   model = User
   slug_filed = "username"
   template_name = "user/user_form.html"
   fields = ['email', "first_name", 'last_name']
-  
+
   def get_success_url(self):
     return reverse('user_detail', args=[self.request.user.username])
-  
+
   def get_object(self, *args, **kwargs):
     object = super(UserUpdateView, self).get_object(*args, **kwargs)
     if object != self.request.user:
       raise PermissionDenied()
     return object
-  
+
 class UserDeleteView(DeleteView):
   model = User
   slug_field = "username"
   template_name = 'user/user_confirm_delete.html'
-  
+
   def get_success_url(self):
     return reverse_lazy('logout')
-  
+
   def get_object(self, *args, **kwargs):
     object = super(UserDeleteView, self).get_object(*args, **kwargs)
     if object != self.request.user:
       raise PermissionDenied()
     return object
-  
+
   def delete(self, request, *args, **kwargs):
     user = super(UserDeleteView, self).get_object(*args)
     user.is_active = False
     user.save()
     return redirect(self.get_success_url())
-  
+
 class SearchCourseListView(CourseListView):
   def get_queryset(self):
     incoming_query_string = self.request.GET.get('query', '')
