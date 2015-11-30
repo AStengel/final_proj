@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for course in object_list %}
+<div class="panel">
+  <h3><a href="{{ course.get_absolute_url }}">{{ course.course }}</a></h3>
+  <p>Added by {{ course.user.username }} on {{ course.created_at }}</p>
+</div>
+{% endfor %}
+{% endblock %}

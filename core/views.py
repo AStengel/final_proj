@@ -14,50 +14,50 @@ from django.core.exceptions import PermissionDenied
 class Home(TemplateView):
   template_name = "home.html"
 
-class ClassCreateView(CreateView):
-  model = Class
-  template_name = "class/class_form.html"
+class CourseCreateView(CreateView):
+  model = Course
+  template_name = "course/course_form.html"
   fields = ['course', 'professor']
-  success_url = reverse_lazy('class_list')
+  success_url = reverse_lazy('course_list')
 
   def form_valid(self, form):
     form.instance.user = self.request.user
-    return super(ClassCreateView, self).form_valid(form)
-class ClassListView(ListView):
-  model = Class
-  template_name = "class/class_list.html"
+    return super(CourseCreateView, self).form_valid(form)
+class CourseListView(ListView):
+  model = Course
+  template_name = "course/course_list.html"
 
-class ClassDetailView(DetailView):
-  model = Class
-  template_name = 'class/class_detail.html'
+class CourseDetailView(DetailView):
+  model = Course
+  template_name = 'course/course_detail.html'
 
   def get_context_data(self, **kwargs):
-    context = super(ClassDetailView, self).get_context_data(**kwargs)
-    Class = Class.objects.get(id=self.kwargs['pk'])
-    notes = Note.objects.filter(Class=Class)
+    context = super(CourseDetailView, self).get_context_data(**kwargs)
+    course = course.objects.get(id=self.kwargs['pk'])
+    notes = Note.objects.filter(course=course)
     context['notes'] = notes
-    user_notes= Note.objects.filter(Class=Class, user=self.request.user)
+    user_notes= Note.objects.filter(course=course, user=self.request.user)
     context['user_notes'] = user_notes
     return context
 
-class ClassUpdateView(UpdateView):
-  model = Class
-  template_name = 'class/class_form.html'
+class CourseUpdateView(UpdateView):
+  model = Course
+  template_name = 'course/course_form.html'
   fields = ['class', 'professor']
 
   def get_object(self, *args, **kwargs):
-    object = super(ClassUpdateView, self).get_object(*args, **kwargs)
+    object = super(CourseUpdateView, self).get_object(*args, **kwargs)
     if object.user !=self.request.user:
       raise PermissionDenied()
     return object
 
-class ClassDeleteView(DeleteView):
-  model = Class
-  template_name = 'class/class_confirm_delete.html'
-  success_url = reverse_lazy('class_list')
+class CourseDeleteView(DeleteView):
+  model = Course
+  template_name = 'course/course_confirm_delete.html'
+  success_url = reverse_lazy('course_list')
 
   def get_object(self, *args, **kwargs):
-    object = super(ClassDeleteView, self).get_object(*args, **kwargs)
+    object = super(CourseDeleteView, self).get_object(*args, **kwargs)
     if object.user !=self.request.user:
       raise PermissionDenied()
     return object
@@ -72,11 +72,11 @@ class NoteCreateView(CreateView):
 
   def form_valid(self, form):
     form.instance.user = self.request.user
-    form.instance.Class = Class.objects.get(id=self.kwargs['pk'])
+    form.instance.course = course.objects.get(id=self.kwargs['pk'])
     return super(NoteCreateView, self).form_valid(form)
 
-    Class= Class.objects.get(id=self.kwargs['pk'])
-    if Note.objects.filter(Class=Class, user=self.request.user).exists():
+    course= course.objects.get(id=self.kwargs['pk'])
+    if Note.objects.filter(course=course, user=self.request.user).exists():
       raise PermissionDenied()
 
 
@@ -102,7 +102,7 @@ class NoteDeleteView(DeleteView):
   template_name = 'note/note_confirm_delete.html'
 
   def get_success_url(self):
-    return self.object.Class.get_absolute_url()
+    return self.object.course.get_absolute_url()
 
   def get_object(self, *args, **kwargs):
     object = super(NoteDeleteView, self).get_object(*args, **kwargs)
