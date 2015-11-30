@@ -8,6 +8,9 @@ from django.views.generic import DetailView
 from django.views.generic import UpdateView
 from django.views.generic import DeleteView
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
+from django.views.generic import FormView
+from .forms import *
 
 # Create your views here.
 
@@ -109,3 +112,17 @@ class NoteDeleteView(DeleteView):
     if object.user !=self.request.user:
       raise PermissionDenied()
     return object
+  
+class VoteFormView(FormView):
+  form_class = VoteForm
+  
+  def form_valid(self, form):
+    user = self.request.user
+    course = Course.objects.get(pk=form.data["course"])
+    prev_votes = Vote.objects.filter(user=user, course=course)
+    has_voted = (prev_votes.count()>0)
+    if not has_voted:
+      Vote.objects.create(user=user, course=course)
+    else:
+      prev_votes[0].delete()
+    return redirect('course_list')
