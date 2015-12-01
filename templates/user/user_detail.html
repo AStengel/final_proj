@@ -10,11 +10,11 @@
 {% endif %}
 <h3>Courses ({{ courses.count }})</h3>
 {% for course in courses %}
-  <p><a href="{{ course.get_absolute_url }}">{{ course.title }}</a></p>
+  <p><a href="{{ course.get_absolute_url }}">{{ course.course }}</a></p>
 {% endfor %}
 <h3>Notes ({{ notes.count }})</h3>
-{% for notes in note %}
-  <p><a href="{{ note.course.get_absolute_url }}">{{ note.question.title }}</a></p>
+{% for note in notes %}
+  <p><a href="{{ note.course.get_absolute_url }}">{{ note.course.course }}</a></p>
   <p>> {{ note.text }}</p>
 {% endfor %}
 {% endblock %}

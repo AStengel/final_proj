@@ -44,7 +44,7 @@ class CourseDetailView(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(CourseDetailView, self).get_context_data(**kwargs)
-    course = course.objects.get(id=self.kwargs['pk'])
+    course = Course.objects.get(id=self.kwargs['pk'])
     notes = Note.objects.filter(course=course)
     context['notes'] = notes
     user_notes= Note.objects.filter(course=course, user=self.request.user)
@@ -81,14 +81,14 @@ class CourseDeleteView(DeleteView):
 class NoteCreateView(CreateView):
   model = Note
   template_name = "note/note_form.html"
-  fields = ['note', 'visibility', 'rating']
+  fields = ['text', 'visibility', 'rating']
 
   def get_success_url(self):
-    return self.object.question.get_absolute_url()
+    return self.object.course.get_absolute_url()
 
   def form_valid(self, form):
     form.instance.user = self.request.user
-    form.instance.course = course.objects.get(id=self.kwargs['pk'])
+    form.instance.course = Course.objects.get(id=self.kwargs['pk'])
     return super(NoteCreateView, self).form_valid(form)
 
     course= course.objects.get(id=self.kwargs['pk'])
@@ -104,7 +104,7 @@ class NoteUpdateView(UpdateView):
   fields = ['text', 'visibility', 'rating']
 
   def get_success_url(self):
-    return self.object.question.get_absolute_url()
+    return self.object.course.get_absolute_url()
 
   def get_object(self, *args, **kwargs):
     object = super(NoteUpdateView, self).get_object(*args, **kwargs)
@@ -167,7 +167,7 @@ class UserDetailView(DetailView):
 
 class UserUpdateView(UpdateView):
   model = User
-  slug_filed = "username"
+  slug_field = "username"
   template_name = "user/user_form.html"
   fields = ['email', "first_name", 'last_name']
 

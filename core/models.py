@@ -26,7 +26,7 @@ class Course(models.Model):
     return reverse("course_detail", args=[self.id])
 
   def __unicode__(self):
-    return self.title
+    return self.course
 
 class Note(models.Model):
   course = models.ForeignKey(Course)
